@@ -5,17 +5,23 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import eu.midnightdust.timechanger.config.TimeChangerConfig;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.minecraft.command.argument.TimeArgumentType;
 import net.minecraft.text.Text;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
 public class CTimeCommand {
 
     public static LiteralArgumentBuilder<FabricClientCommandSource> command() {
-        return ClientCommandManager.literal("ctime").then(
-                argument("time", IntegerArgumentType.integer(-1))
-                        .executes(ctx -> setTime(ctx.getSource(), IntegerArgumentType.getInteger(ctx, "time")))
-        );
+        return literal("ctime")
+                .then(literal("set").then(
+                        literal("day").executes((context -> setTime(context.getSource(), 1000)))).then(
+                        literal("noon").executes((context -> setTime(context.getSource(), 6000)))).then(
+                        literal("night").executes((context -> setTime(context.getSource(), 13000)))).then(
+                        literal("midnight").executes((context -> setTime(context.getSource(), 18000)))).then(
+                        argument("time", TimeArgumentType.time()).executes((context -> setTime(context.getSource(), IntegerArgumentType.getInteger(context, "time")))))
+                );
     }
 
     private static int setTime(FabricClientCommandSource source, int time) {
