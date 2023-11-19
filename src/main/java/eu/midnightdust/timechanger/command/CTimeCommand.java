@@ -20,6 +20,7 @@ public class CTimeCommand {
                         literal("noon").executes((context -> setTime(context.getSource(), 6000)))).then(
                         literal("night").executes((context -> setTime(context.getSource(), 13000)))).then(
                         literal("midnight").executes((context -> setTime(context.getSource(), 18000)))).then(
+                        literal("reset").executes((context -> setTime(context.getSource(), -1)))).then(
                         argument("time", TimeArgumentType.time()).executes((context -> setTime(context.getSource(), IntegerArgumentType.getInteger(context, "time")))))
                 );
     }
